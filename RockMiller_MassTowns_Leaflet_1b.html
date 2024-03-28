@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+Authorization: Stadia-Auth 166a8804-2976-4723-9652-33257ce7d1e6
+<title>Massachusetts Settlements (Rock Miller)</title>
+<head>
+
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+ integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+ crossorigin=""/>
+
+ <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+
+<script src="https://unpkg.com/leaflet-providers@latest/leaflet-providers.js"></script>
+<script src="jquery-3.7.1.min.js"></script>
+
+</head>
+<body>
+<h3>Massachusetts Settlements</h3>
+
+<div id="map"></div>
+<style>
+#map { height: 600px; }
+</style>
+
+<script>
+var map = L.map('map').setView([42.26259, -71.80229],8);
+
+var base = 
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+}).addTo(map);
+ 
+</script>
+</div>
+
+<div id="points">
+<script>
+    var pointStyleDefault = {
+    radius: 3,
+    fillColor: 'black',
+    color: 'black',
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 1
+};
+var pointStyleNative = {
+    radius: 3,
+    fillColor: 'red',
+    color: 'red',
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 1
+};
+console.log(pointStyleDefault, pointStyleNative)
+
+const fetchPromise = fetch("https://raw.githubusercontent.com/rockmiller/masstowns/main/mass_towns_points.geojson");
+fetchPromise.then(response => {
+  return response.json();
+}).then(pointsTowns => {
+  console.log(pointsTowns);
+  L.geoJSON(pointsTowns, {
+    pointToLayer: function (feature, latlng) {
+        switch (feature.properties.m_category) {
+            case 'Native': return L.circleMarker(latlng, pointStyleNative);
+            default: return L.circleMarker(latlng, pointStyleDefault);}}
+    }).addTo(map);
+});
+
+
+
+</script>
+</div>
+</body>
+</html>
