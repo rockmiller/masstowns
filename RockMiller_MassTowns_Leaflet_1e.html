@@ -32,7 +32,7 @@
 var map = L.map('map').setView([42.26259, -71.80229],8);
 console.log(map);
 
-var base = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {layers: 'SRTM30-Hillshade'}).addTo(map);
+var base = L.tileLayer.wms('http://ows.mundialis.de/services/service?', {layers: 'TOPO-WMS'}).addTo(map);
 console.log(base);
 
 </script>
@@ -41,34 +41,34 @@ console.log(base);
 <div id="points">
 <script>
     var pointStyleDefault = {
-    radius: 1,
-    fillColor: 'black',
-    color: 'black',
+    radius: 1.5,
+    fillColor: 'grey',
+    color: 'grey',
     weight: 1,
     opacity: 1,
     fillOpacity: 1
 };
 var pointStyleCase1 = {
-    radius: 3,
-    fillColor: 'blue',
-    color: 'blue',
-    weight: 1,
+    radius: 4,
+    fillColor: 'royalblue',
+    color: 'white',
+    weight: 1.2,
     opacity: 1,
     fillOpacity: 1
 };
 var pointStyleCase2 = {
-    radius: 3,
+    radius: 4,
     fillColor: 'red',
-    color: 'red',
-    weight: 1,
+    color: 'white',
+    weight: 1.2,
     opacity: 1,
     fillOpacity: 1
 };
 var pointStyleCase3 = {
-    radius: 3,
-    fillColor: 'orange',
-    color: 'darkbrown',
-    weight: 2,
+    radius: 4,
+    fillColor: 'purple',
+    color: 'white',
+    weight: 1.2,
     opacity: 1,
     fillOpacity: 1
 };
@@ -81,17 +81,17 @@ fetchPromise.then(response => {
   L.geoJSON(pointsTowns, {
     pointToLayer: function (feature, latlng) {
         yr = feature.properties.m_yrsettled
-        if (yr >= 1754) return L.circleMarker(latlng, pointStyleCase1);
-        if (yr >= 1715) return L.circleMarker(latlng, pointStyleCase2);
-        if (yr >= 1675) return L.circleMarker(latlng, pointStyleCase3);
+        if (yr <= 1630) return L.circleMarker(latlng, pointStyleCase1);
+        if (yr <= 1642) return L.circleMarker(latlng, pointStyleCase2);
+        if (yr <= 1675) return L.circleMarker(latlng, pointStyleCase3);
         else return L.circleMarker(latlng, pointStyleDefault);}}).addTo(map)});
 
-const fetch2 = fetch("https://raw.githubusercontent.com/rockmiller/masstowns/main/mass_towns_points.geojson");
+const fetch2 = fetch("https://raw.githubusercontent.com/rockmiller/masstowns/main/mass_state_border.geojson");
 fetch2.then(response => {
   return response.json();
 }).then(bordersState => {
   console.log(bordersState);
-  L.geoJSON(bordersState).addTo(map);
+  L.geoJSON(bordersState, { style: {'color':'black', 'weight': 2, 'fillOpacity':0}}).addTo(map)});
 
 </script>
 </div>
